@@ -26,8 +26,8 @@ app.use(express.json());
 app.use(helmet());
 app.use(helmet.crossOriginResourcePolicy({ policy: "cross-origin" }));
 app.use(morgan("common"));
-app.use(bodyParser.json({ limit: 100000000, extended: true }));
-app.use(bodyParser.urlencoded({ limit: 100000000, extended: true }));
+app.use(bodyParser.json({ limit: "60mb", extended: true }));
+app.use(bodyParser.urlencoded({ limit: "60mb", extended: true }));
 app.use(cors());
 app.use("/assets", express.static(path.join(__dirname, "public/assets")));
 
@@ -40,12 +40,7 @@ const storage = multer.diskStorage({
         cb(null, file.originalname);
     },
 });
-const upload = multer({
-    storage,
-    limits: {
-        fileSize: 100000000, //100MB
-    },
-});
+const upload = multer({ storage });
 
 /* ROUTES WITH FILES */
 app.post("/auth/register", upload.single("picture"), register);
